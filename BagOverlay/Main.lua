@@ -18,7 +18,7 @@ import "GymGnopf.BagOverlay.QuickslotButton";
 BagOverlay = {};
 
 -- Set to true to enable verbose debug logging in chat
-BagOverlay.DEBUG = true;
+BagOverlay.DEBUG = false;
 BagOverlay.VERSION = "1.0";
 
 -- Plugin window instance
