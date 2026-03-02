@@ -5,3 +5,5 @@ Planned new features / ideas:
 - [ ] Display money
 - [ ] Larger Icons (Enable by settting)
 - [ ] Filter / Search bar?
+- [ ] Add a button to lock items.
+- [ ] Add buttons to categories to lock whole categories.
