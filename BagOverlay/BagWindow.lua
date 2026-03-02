@@ -99,21 +99,23 @@ function BagWindow:BuildContent()
     self.contentList:ClearItems();
     self.contentList:SetTop(TOP_MARGIN);
 
-    local categories = InventoryManager:GetAllCategories();
-    local colWidth   = math.floor((CONTENT_W - COL_GAP) / 2);
+    local categories       = InventoryManager:GetAllCategories();
+    local colWidth         = math.floor((CONTENT_W - COL_GAP) / 2);
 
-    local nonEmpty   = {};
+    local categorySections = {};
     for i = 1, #categories do
         local items = InventoryManager:GetItemsInCategory(categories[i]);
         if #items > 0 then
-            table.insert(nonEmpty, { name = categories[i], items = items });
+            table.insert(categorySections, { name = categories[i], items = items });
         end
     end
 
+    categorySections = BagWindow:SortItems(categorySections)
+
     local totalH = 0;
-    for i = 1, #nonEmpty, 2 do
-        local leftCat  = nonEmpty[i];
-        local rightCat = nonEmpty[i + 1];
+    for i = 1, #categorySections, 2 do
+        local leftCat  = categorySections[i];
+        local rightCat = categorySections[i + 1];
 
         local leftH    = categoryHeight(leftCat.items);
         local rightH   = rightCat and categoryHeight(rightCat.items) or 0;
@@ -130,4 +132,16 @@ function BagWindow:BuildContent()
         self.contentList:AddItem(row);
         totalH = totalH + rowH;
     end
+end
+
+function BagWindow:SortItems(categorySections)
+    for i = 1, #categorySections do
+        table.sort(categorySections[i].items, function(a, b)
+            local catA = Item:GetCategoryIndex(a.item);
+            local catB = Item:GetCategoryIndex(b.item);
+            if catA ~= catB then return catA < catB end;
+            return Item:GetName(a.item) < Item:GetName(b.item);
+        end);
+    end
+    return categorySections
 end

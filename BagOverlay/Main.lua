@@ -9,6 +9,7 @@ import "Turbine.UI.Lotro";
 
 -- Import plugin modules
 import "GymGnopf.BagOverlay.Settings";
+import "GymGnopf.BagOverlay.Item";
 import "GymGnopf.BagOverlay.CategoryMapper";
 import "GymGnopf.BagOverlay.InventoryManager";
 import "GymGnopf.BagOverlay.BagWindow";
