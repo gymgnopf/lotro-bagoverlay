@@ -69,7 +69,7 @@ end
 
 -- Register the /bags shell command
 function BagOverlay:RegisterCommand()
-    bagsCommand = Turbine.ShellCommand();
+    local bagsCommand = Turbine.ShellCommand();
 
     bagsCommand.Execute = function(command, args)
         BagOverlay:ToggleBagWindow();

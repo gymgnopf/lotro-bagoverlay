@@ -31,6 +31,7 @@ function QuickslotButton:Create()
         Turbine.UI.Lotro.ShortcutType.Alias,
         "/bagov"
     );
+
     self.slot = Turbine.UI.Lotro.Quickslot();
     self.slot:SetParent(self.window);
     self.slot:SetShortcut(shortcut);
