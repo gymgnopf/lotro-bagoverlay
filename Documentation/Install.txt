@@ -1,0 +1,54 @@
+BagOverlay - Installation Guide
+================================
+
+REQUIREMENTS
+------------
+- Lord of the Rings Online (any recent update)
+- Lua plugin support enabled (default)
+
+
+MANUAL INSTALLATION
+-------------------
+1. Download the ZIP and copy the GymGnopf folder into your LotRO Plugins directory:
+
+     Documents\The Lord of the Rings Online\Plugins\
+
+   The result should look like this:
+
+     Plugins\
+     └── GymGnopf\
+         ├── BagOverlay.plugin
+         └── BagOverlay\
+             ├── Main.lua
+             └── ...
+
+2. Launch (or re-launch) Lord of the Rings Online.
+
+3. Open the Plugin Manager in-game and load BagOverlay from the list.
+
+
+INSTALLATION VIA PLUGIN COMPENDIUM
+-----------------------------------
+Plugin Compendium is a third-party tool that manages LotRO plugin installation
+and updates automatically.
+
+1. Download and install Plugin Compendium from:
+     https://www.lotrointerface.com/downloads/info802-PluginCompendium.html
+
+2. In Plugin Compendium, search for "BagOverlay" and click Install.
+   The tool will place the files in the correct directory automatically.
+
+3. Launch Lord of the Rings Online and load BagOverlay via the Plugin Manager.
+
+
+USAGE
+-----
+  - Click the quickslot icon    : Toggle the inventory overlay
+  - Drag the quickslot icon     : Reposition it on screen
+  - Type /bagov in chat         : Toggle the inventory overlay
+
+
+BUG REPORTS & FEEDBACK
+-----------------------
+  GitHub       : https://github.com/gymgnopf/lotro-bagoverlay
+  LotRO Interface : http://www.lotrointerface.com/downloads/info1279  (user: gymgnopf)
