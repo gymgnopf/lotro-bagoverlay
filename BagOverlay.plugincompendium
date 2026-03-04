@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PluginConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>1279</Id>
+  <Name>BagOverlay</Name>
+  <Version>v1.1.0</Version>
+  <Author>gymgnopf</Author>
+  <InfoUrl>http://www.lotrointerface.com/downloads/info1279</InfoUrl>
+  <DownloadUrl>http://www.lotrointerface.com/downloads/download1279</DownloadUrl>
+  <Descriptors>
+    <descriptor>GymGnopf\BagOverlay.plugin</descriptor>
+  </Descriptors>
+  <Dependencies />
+</PluginConfig>

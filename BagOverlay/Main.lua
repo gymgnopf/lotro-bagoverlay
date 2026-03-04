@@ -19,11 +19,7 @@ import "GymGnopf.BagOverlay.QuickslotButton";
 BagOverlay = {};
 
 -- Set to true to enable verbose debug logging in chat
-BagOverlay.DEBUG = false;
-BagOverlay.VERSION = "1.0";
-
--- Plugin window instance
-local bagWindow = nil;
+BagOverlay.DEBUG = true;
 
 -- Color escape sequences for Turbine.Shell.WriteLine
 -- Format: \aFRRGGBB sets foreground color, \aFFFFFFF resets to white
@@ -33,17 +29,29 @@ local C = {
 };
 
 -- Log a message only when debug mode is enabled
-function BagOverlay.Log(msg)
+function BagOverlay:Log(msg)
     if BagOverlay.DEBUG then
-        Turbine.Shell.WriteLine(C.log .. "[BagOverlay]" .. tostring(msg) .. "</rgb>");
+        Turbine.Shell.WriteLine(C.log .. "[" .. BagOverlay:Name() .. "] " .. tostring(msg) .. "</rgb>");
     end
 end
 
--- Always-visible warning (unmapped categories, unexpected states, etc.)
-function BagOverlay.Warn(msg)
+-- Warn only if debug mode is active
+function BagOverlay:Warn(msg)
     if BagOverlay.DEBUG then
-        Turbine.Shell.WriteLine(C.warn .. "[BagOverlay] WARN:" .. tostring(msg) .. "</rgb>");
+        Turbine.Shell.WriteLine(C.warn .. "[" .. BagOverlay:Name() .. "] Warning: " .. tostring(msg) .. "</rgb>");
     end
+end
+
+-- display plugin version
+function BagOverlay:Version()
+    local pluginVersion = Turbine.Plugin.GetVersion();
+    return pluginVersion;
+end
+
+-- display the plugin name
+function BagOverlay:Name()
+    local pluginName = Turbine.Plugin.GetVersion();
+    return pluginName;
 end
 
 -- Initialize the plugin
@@ -63,7 +71,7 @@ function BagOverlay:Initialize()
     QuickslotButton:Create();
 
     Turbine.Shell.WriteLine("[BagOverlay] Version " ..
-        BagOverlay.VERSION .. " Loaded. Click the quickslot button or type /bagov to toggle."
+        BagOverlay:Version() .. " Loaded. Click the quickslot button or type /bagov to toggle."
     );
 end
 
