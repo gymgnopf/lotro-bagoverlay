@@ -45,16 +45,16 @@ function Settings:Load()
             self.data.categories = pluginData.categories;
         end
 
-        Turbine.Shell.WriteLine("BagOverlay: Settings loaded.");
+        BagOverlay.Log("BagOverlay: Settings loaded.");
     else
-        Turbine.Shell.WriteLine("BagOverlay: No saved settings found, using defaults.");
+        BagOverlay.Log("BagOverlay: No saved settings found, using defaults.");
     end
 end
 
 -- Save settings to PluginData
 function Settings:Save()
     Turbine.PluginData.Save(Turbine.DataScope.Character, "BagOverlay", self.data);
-    Turbine.Shell.WriteLine("BagOverlay: Settings saved.");
+    BagOverlay.Log("BagOverlay: Settings saved.");
 end
 
 -- Get window settings
