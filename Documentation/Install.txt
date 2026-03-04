@@ -33,7 +33,7 @@ Plugin Compendium is a third-party tool that manages LotRO plugin installation
 and updates automatically.
 
 1. Download and install Plugin Compendium from:
-     https://www.lotrointerface.com/downloads/info802-PluginCompendium.html
+     https://www.lotrointerface.com/downloads/info663-LOTROPluginCompendium.html
 
 2. In Plugin Compendium, search for "BagOverlay" and click Install.
    The tool will place the files in the correct directory automatically.
