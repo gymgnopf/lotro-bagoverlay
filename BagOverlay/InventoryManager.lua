@@ -187,6 +187,21 @@ function InventoryManager:GetAllCategories()
     return CategoryMapper:GetAllCategories();
 end
 
+-- Get the number of occupied backpack slots
+function InventoryManager:GetUsedSlotCount()
+    local count = 0;
+    for _ in pairs(self.itemIndexMap) do
+        count = count + 1;
+    end
+    return count;
+end
+
+-- Get the total backpack capacity
+function InventoryManager:GetTotalSlotCount()
+    if self.backpack == nil then return 0; end
+    return self.backpack:GetSize();
+end
+
 -- Get item count for a category
 function InventoryManager:GetCategoryItemCount(category)
     local items = self.itemsByCategory[category];

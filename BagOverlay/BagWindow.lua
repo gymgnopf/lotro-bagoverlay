@@ -18,8 +18,11 @@ local ROW_GAP       = 20;
 local TOP_MARGIN    = 40;
 local SCROLLBAR_W   = 10;
 
+local PANEL_H       = 26;
+local PANEL_GAP     = 6;
+
 local CONTENT_W     = WIN_WIDTH - MARGIN * 2 - SCROLLBAR_W - 4;
-local AREA_H        = WIN_HEIGHT - TOP_MARGIN - MARGIN;
+local AREA_H        = WIN_HEIGHT - TOP_MARGIN - MARGIN - PANEL_H - PANEL_GAP;
 
 local function categoryHeight(items)
     local rows = math.ceil(#items / ITEMS_PER_ROW);
@@ -53,7 +56,7 @@ end
 
 function BagWindow:CreateInstanceWindow()
     local sw, sh = Turbine.UI.Display:GetSize();
-    InstanceWindow = Turbine.UI.Lotro.GoldWindow();
+    InstanceWindow = Turbine.UI.Lotro.Window();
     InstanceWindow:SetSize(WIN_WIDTH, WIN_HEIGHT);
     InstanceWindow:SetText("Inventory");
     InstanceWindow:SetPosition(sw - WIN_WIDTH - 20, (sh - WIN_HEIGHT) / 2);
@@ -85,6 +88,56 @@ function BagWindow:Init()
     end
     self.contentList:SetVerticalScrollBar(self.scrollBar)
 
+    -- Bottom status panel
+    self:SubscribeWallet();
+
+    local panelY    = TOP_MARGIN + AREA_H + PANEL_GAP;
+    local SIDE_PAD  = 20;
+
+    self.slotsLabel = Turbine.UI.Label();
+    self.slotsLabel:SetParent(InstanceWindow);
+    self.slotsLabel:SetPosition(MARGIN + SIDE_PAD, panelY);
+    self.slotsLabel:SetSize(math.floor(CONTENT_W / 2), PANEL_H);
+    self.slotsLabel:SetFont(Turbine.UI.Lotro.Font.TrajanPro15);
+    self.slotsLabel:SetForeColor(Turbine.UI.Color(0.7, 0.7, 0.7));
+    self.slotsLabel:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleLeft);
+
+    -- Coin icons via hardcoded game image IDs (27x16 px), same approach as GaranStuff/Wallet
+    -- Layout per group: [number] [icon] — icon sits to the right of the number
+    local COIN_W       = 27;
+    local COIN_H       = 16;
+    local NUM_W        = 30;
+    local GROUP_W      = NUM_W + 2 + COIN_W;
+    local GROUP_GAP    = 0;
+    local totalMoneyW  = GROUP_W * 3 + GROUP_GAP * 2;
+    -- Right-align the block against the window border, respecting SIDE_PAD
+    local baseX        = WIN_WIDTH - MARGIN - (SIDE_PAD / 2) - totalMoneyW;
+    local coinY        = panelY + math.floor((PANEL_H - COIN_H) / 2);
+
+    local coinImageIDs = { 0x41007e7b, 0x41007e7c, 0x41007e7d };
+
+    self.moneyNums     = {};
+    for d = 1, 3 do
+        local gx = baseX + (d - 1) * (GROUP_W + GROUP_GAP);
+
+        local numLabel = Turbine.UI.Label();
+        numLabel:SetParent(InstanceWindow);
+        numLabel:SetPosition(gx, panelY);
+        numLabel:SetSize(NUM_W, PANEL_H);
+        numLabel:SetFont(Turbine.UI.Lotro.Font.TrajanPro15);
+        numLabel:SetForeColor(Turbine.UI.Color(1, 0.85, 0.5));
+        numLabel:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleRight);
+
+        local icon = Turbine.UI.Control();
+        icon:SetParent(InstanceWindow);
+        icon:SetPosition(gx + NUM_W + 4, coinY);
+        icon:SetSize(COIN_W, COIN_H);
+        icon:SetBlendMode(Turbine.UI.BlendMode.Overlay);
+        icon:SetBackground(coinImageIDs[d]);
+
+        self.moneyNums[d] = numLabel;
+    end
+
     self:BuildContent();
 
     InventoryManager:SetCategoryUpdatedCallback(function()
@@ -93,6 +146,48 @@ function BagWindow:Init()
     InventoryManager:SetInventoryRefreshedCallback(function()
         BagWindow:BuildContent();
     end);
+end
+
+function BagWindow:SubscribeWallet()
+    local player = Turbine.Gameplay.LocalPlayer:GetInstance();
+    self.wallet = player:GetWallet();
+
+    local function onChange()
+        BagWindow:UpdateStatusBar();
+    end
+
+    for i = 1, self.wallet:GetSize() do
+        local walletItem = self.wallet:GetItem(i);
+        if walletItem ~= nil then
+            walletItem.QuantityChanged = onChange;
+        end
+    end
+
+    self.wallet.ItemAdded = function(sender, args)
+        local walletItem = self.wallet:GetItem(args.Index);
+        if walletItem ~= nil then
+            walletItem.QuantityChanged = onChange;
+        end
+        BagWindow:UpdateStatusBar();
+    end;
+    self.wallet.ItemRemoved = onChange;
+end
+
+function BagWindow:UpdateStatusBar()
+    if self.slotsLabel == nil or self.moneyNums == nil then return; end
+
+    local used  = InventoryManager:GetUsedSlotCount();
+    local total = InventoryManager:GetTotalSlotCount();
+    self.slotsLabel:SetText(used .. " / " .. total .. " slots");
+
+    local player = Turbine.Gameplay.LocalPlayer:GetInstance();
+    local gold, silver, copper = player:GetAttributes():GetMoneyComponents();
+    local amounts = { gold, silver, copper };
+    for d = 1, 3 do
+        if self.moneyNums[d] ~= nil then
+            self.moneyNums[d]:SetText(tostring(amounts[d]));
+        end
+    end
 end
 
 function BagWindow:BuildContent()
@@ -132,6 +227,8 @@ function BagWindow:BuildContent()
         self.contentList:AddItem(row);
         totalH = totalH + rowH;
     end
+
+    self:UpdateStatusBar();
 end
 
 function BagWindow:SortItems(categorySections)
