@@ -9,7 +9,7 @@ Settings.data = {
     window = {
         x = 100,
         y = 100,
-        width = 450,
+        width = 520,
         height = 600
     },
     quickslot = {
@@ -100,3 +100,4 @@ function Settings:SetCategoryCollapsed(categoryName, collapsed)
     end
     self.data.categories[categoryName].collapsed = collapsed;
 end
+
