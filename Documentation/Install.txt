@@ -25,7 +25,7 @@ MANUAL INSTALLATION
 2. Launch (or re-launch) Lord of the Rings Online.
 
 3. Open the Plugin Manager in-game and load BagOverlay from the list.
-
+s
 
 INSTALLATION VIA PLUGIN COMPENDIUM
 -----------------------------------

@@ -7,9 +7,12 @@ BagOverlay adds a small draggable icon to your screen. Clicking it opens an over
 [B]Features[/B]
 
 - 13 item categories: Weapons, Armor, Jewelry, Consumables, Scrolls, Crafting Materials, Crafting Tools, Quest Items, Cosmetics & Mounts, Class Items, Decorations, Trophies, Miscellaneous
+- Dynamic multi-column layout — 1, 2, or 3 category columns depending on window width (thresholds: 480 px / 620 px)
+- Resizable window — drag to any width up to 760 px; layout adjusts automatically
+- Status bar showing used/total inventory slots and current money (gold, silver, copper)
 - Floating quickslot button with custom icon — drag it anywhere on screen; position is saved between sessions
 - Toggle the window with a single click or via the `/bagov` chat command
-- Window position and collapsed category states are saved per character
+- Window size is saved per character
 - Built-in debug mode for developers (toggle `BagOverlay.DEBUG` in `Main.lua`)
 
 [B]Installation[/B]
@@ -35,6 +38,11 @@ Drag the quickslot icon -> Reposition it on screen
 `/bagov` in chat -> Toggle the inventory overlay
 
 [B]Version history[/B]
+[U]v1.2.0[/U]
+Add dynamic multi-column category layout: 1 column below 480 px, 2 columns at 480 px, 3 columns at 620 px
+Add resizable window with adjustable width up to 760 px
+Add status bar showing used/total inventory slots and current money (gold, silver, copper)
+
 [U]v1.1.0[/U]
 Improve item sorting within category sections
 Add support for the Plugin Compendium

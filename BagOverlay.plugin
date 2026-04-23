@@ -1,10 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <Plugin>
     <Information>
         <Name>BagOverlay</Name>
         <Author>gymgnopf</Author>
         <Version>1.2.0</Version>
-        <Description>Displays your backpack inventory grouped by category in a floating overlay window.</Description>
+        <Description
+        >Displays your backpack inventory grouped by category in a floating overlay window.</Description>
         <Image>GymGnopf/BagOverlay/Ressource/inventory-icon.tga</Image>
     </Information>
     <Package>GymGnopf.BagOverlay.Main</Package>

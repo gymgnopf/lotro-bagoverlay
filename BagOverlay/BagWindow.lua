@@ -19,8 +19,10 @@ local PANEL_GAP   = 6;
 -- Window width
 local MIN_W       = 340;
 local MIN_H       = 400;
-local MAX_W       = 480;
+local MAX_W       = 760;
 local MAX_H       = 1200;
+-- Category column layout
+local CAT_COL_GAP = 12;   -- horizontal gap between category columns
 -- Money display constants
 local COIN_W      = 27;
 local COIN_H      = 16;
@@ -34,6 +36,13 @@ local function getLayoutDims()
     local ah     = h - TOP_MARGIN - MARGIN - PANEL_H - PANEL_GAP;
     local perRow = math.max(1, math.floor(cw / ITEM_SIZE));
     return cw, ah, perRow;
+end
+
+local function getCategoryColumnCount()
+    local w, _ = InstanceWindow:GetSize();
+    if w >= 620 then return 3;
+    elseif w >= 480 then return 2;
+    else return 1; end
 end
 
 local function categoryHeight(items, itemsPerRow)
@@ -216,9 +225,12 @@ function BagWindow:BuildContent()
     self.contentList:ClearItems();
     self.contentList:SetTop(TOP_MARGIN);
 
-    local cw, _, perRow    = getLayoutDims();
-    local categories       = InventoryManager:GetAllCategories();
+    local cw, _, _       = getLayoutDims();
+    local numCatCols     = getCategoryColumnCount();
+    local catColW        = math.floor((cw - CAT_COL_GAP * (numCatCols - 1)) / numCatCols);
+    local itemsPerRow    = math.max(1, math.floor(catColW / ITEM_SIZE));
 
+    local categories     = InventoryManager:GetAllCategories();
     local categorySections = {};
     for i = 1, #categories do
         local items = InventoryManager:GetItemsInCategory(categories[i]);
@@ -226,20 +238,45 @@ function BagWindow:BuildContent()
             table.insert(categorySections, { name = categories[i], items = items });
         end
     end
-
     categorySections = BagWindow:SortItems(categorySections);
 
-    for i = 1, #categorySections do
-        local cat    = categorySections[i];
-        local blockH = categoryHeight(cat.items, perRow) + ROW_GAP;
-
-        local row    = Turbine.UI.Control();
-        row:SetSize(cw, blockH);
-
-        buildCategoryBlock(row, cat.name, cat.items, 0, 0, cw, perRow);
-        self.contentList:AddItem(row);
+    local numCats = #categorySections;
+    if numCats == 0 then
+        self:UpdateStatusBar();
+        return;
     end
 
+    local perCol = math.ceil(numCats / numCatCols);
+
+    -- Find height of tallest category column
+    local totalH = 0;
+    for c = 1, numCatCols do
+        local colH     = 0;
+        local startIdx = (c - 1) * perCol + 1;
+        local endIdx   = math.min(c * perCol, numCats);
+        for i = startIdx, endIdx do
+            colH = colH + categoryHeight(categorySections[i].items, itemsPerRow) + ROW_GAP;
+        end
+        if colH > totalH then totalH = colH; end
+    end
+
+    local container = Turbine.UI.Control();
+    container:SetSize(cw, totalH);
+
+    for c = 1, numCatCols do
+        local colX     = (c - 1) * (catColW + CAT_COL_GAP);
+        local curY     = 0;
+        local startIdx = (c - 1) * perCol + 1;
+        local endIdx   = math.min(c * perCol, numCats);
+        for i = startIdx, endIdx do
+            local cat    = categorySections[i];
+            local blockH = categoryHeight(cat.items, itemsPerRow);
+            buildCategoryBlock(container, cat.name, cat.items, colX, curY, catColW, itemsPerRow);
+            curY = curY + blockH + ROW_GAP;
+        end
+    end
+
+    self.contentList:AddItem(container);
     self:UpdateStatusBar();
 end
 
